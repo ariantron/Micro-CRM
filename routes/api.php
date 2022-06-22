@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthApiController;
+use App\Http\Controllers\CompanyApiController;
+use App\Http\Controllers\EmployeeApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/login', [AuthApiController::class, 'login']);
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/user', [AuthApiController::class, 'user']);
+    Route::apiResources(
+        [
+            'companies' => CompanyApiController::class,
+            'employees' => EmployeeApiController::class
+        ]
+    );
 });
